@@ -1,23 +1,42 @@
 # ЗДЕСЬ БУДУТ ПОДГРУЖАТЬСЯ СПИСКИ ПРЕДМЕТОВ И МОБОВ, А ЕЩЁ ВСЯКИЕ ПЕРДЕЛКИ ТИПА ВЫХОДА ИЗ ПРИЛОЖЕНИЯ
 # И ГЕНЕРАЦИЯ ПРЕДМЕТОВ/МОБОВ
 import random
+import json
 
-with open('itemt_list.txt', 'r', encoding='utf-8') as itemt_in:
-    itemt_list = itemt_in.read().split('; ')
+# АЙТЕМСЫ
+with open("items.json", "r", encoding='utf-8') as item_in:
+    item_l = json.load(item_in)
 
-with open('pfix_list.txt', 'r', encoding='utf-8') as pfix_in:
-    pfix_list = pfix_in.read().split('; ')
-
-with open('affix_list.txt', 'r', encoding='utf-8') as affix_in:
-    affix_list = affix_in.read().split('; ')
-
-
-def gen_item(itemt_list, pfix_list, affix_list):
-    type = random.choice(itemt_list)
-    pfix = random.choice(pfix_list)
-    affix = random.choice(affix_list)
+def gen_item():
+    type = random.choice(item_l["type"])
+    pfix = random.choice(item_l["postfix"])
+    affix = random.choice(item_l["affix"])
     name = affix + ' ' + type + ' ' + pfix
     print(name)
 
+#=======================================================================================================================
 
-gen_item(itemt_list, pfix_list, affix_list)
+# МОБСЫ
+with open("mobs.json", "r", encoding='utf-8') as mob_in:
+    mob_l = json.load(mob_in)
+
+def gen_mob():
+    type = random.choice(mob_l["type"])
+    pfix = random.choice(mob_l["postfix"])
+    affix = random.choice(mob_l["affix"])
+    name = affix + ' ' + type + ' ' + pfix
+    print(name)
+
+while True:
+    print('1: Generate item\n2: Generate mob\n0: Exit')
+    try:
+        choice = int(input())
+        if choice == 1:
+            gen_item()
+        elif choice == 2:
+            gen_mob()
+        elif choice == 0:
+            break
+    except ValueError:
+        print(ValueError)
+        print('ENTER CORRECT NUMBER DUMBO')
