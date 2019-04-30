@@ -2,7 +2,6 @@
 import random
 import json
 
-
 from pip._vendor.distlib.compat import raw_input
 
 # АЙТЕМСЫ
@@ -11,15 +10,32 @@ with open("items.json", "r", encoding='utf-8') as item_in:
 
 
 def gen_item():
-    ilvl = float(raw_input("Enter item lvl: "))
+    try:
+        ilvl = float(raw_input("Enter item lvl: "))
+    except ValueError:
+        ilvl = random.randint(1, 10)
+    rarity = random.uniform(0, 3)
+    name = ""
     if ilvl > 10:
         ilvl = 10
-    elif ilvl == 0:
-        ilvl = random.randint(1, 10)
-    name = "{} {} {}".format(random.choice(item_l["affix"]), random.choice(item_l["type"]), random.choice(item_l["postfix"]))
-    # TODO: stats of items.
+        # TODO: stats of items.
+    if rarity < 1:
+        name = random.choice(item_l["type"])
+        modifiers = 0
+    elif 1 <= rarity < 2:
+        name = "{} {}".format(random.choice(item_l["type"]), random.choice(item_l["postfix"]))
+        modifiers = 1
+    elif 2 <= rarity < 3:
+        name = "{} {} {}".format(random.choice(item_l["affix"]), random.choice(item_l["type"]),
+                                 random.choice(item_l["postfix"]))
+        modifiers = 2
+    else:
+        name = "{} {} {}".format(random.choice(item_l["affix"]), random.choice(item_l["type"]),
+                                 random.choice(item_l["postfix"]))
+        modifiers = 3
     damage = random.uniform(ilvl, ilvl * 2)
-    print(name, '\n', int(damage))
+    print('Name: {}\n Item lvl: {}\n Rarity: {}\n Modifiers: {}\n Damage: {}'
+          .format(name, ilvl, rarity, modifiers, int(damage)))
 
 
 # ======================================================================================================================
