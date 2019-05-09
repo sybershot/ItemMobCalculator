@@ -1,20 +1,81 @@
 {
-  "affix": [
-    "mega",
-    "giga",
-    "micro",
-    "macro",
-    "fiery",
-    "icy"
+  "major_mod": [
+    {
+      "name": "Mega",
+      "description": "Giant weapons, anyone?",
+      "effect_tip": "Increased damage by 20%, movement speed is decreased by 15% while kept.",
+      "effects": {
+        "item_dmgmult": 1.2,
+        "player_movspeed": 0.85
+      }
+    },
+    {
+      "name": "Giga",
+      "description": "I have no idea how you could lift this up, but you certainly did. Boy it's heavy.",
+      "effect_tip": "Increased damage by 40%, movement speed is decreased by 30% while kept.",
+      "effects": {
+        "item_dmgmult": 1.4,
+        "player_movspeed": 0.7
+      }
+    },
+    {
+      "name": "Fiery",
+      "description": "Ignites stuff on hit.",
+      "effect_tip": "Adds %s additional fire damage per second.",
+      "effects": {
+        "damagetype": "fire",
+        "effectpower": "2-4"
+      }
+    },
+    {
+      "name": "Icy",
+      "description": "One crazy magician really wanted to get some ice cream, so they enchanted this item to make ice cream out of their enemies!",
+      "effect_tip": "Freezes enemies on hit for 1 second.",
+      "effects": {
+        "damagetype": "ice",
+        "effectpower": "1"
+      }
+    }
   ],
-  "type": [
-    "sword",
-    "bow",
-    "wand"
+  "minor_mod": [
+    {
+      "name": "of glass",
+      "description": "Glass canon mode: active",
+      "effect_tip": "Damage is increased by 6.66 times, but reduces maximum hp to 1%.",
+      "effects": {
+        "item_dmgmult": 6.66,
+        "player_maxhpmult": 0.01
+      }
+    },
+    {
+      "name": "of swiftness",
+      "description": "Gotta go fast!",
+      "effect_tip": "Move speed is increased by 35% while item is held",
+      "effects": {
+        "player_movspeed": 1.35
+      }
+    }
   ],
-  "postfix": [
-    "of ass destruction",
-    "of middle man",
-    "of the higher lands"
-  ]
+  "weapon_type": {
+    "melee": {
+      "names": [
+        "Sword",
+        "Axe",
+        "Halberd"
+      ]
+    },
+    "ranged": {
+      "names": [
+        "Bow",
+        "Crossbow",
+        "Pistol"
+      ]
+    },
+    "magic": {
+      "names": [
+        "Sand",
+        "Spellbook"
+      ]
+    }
+  }
 }

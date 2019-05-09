@@ -10,6 +10,6 @@ while True:
             gen_mob()
         elif choice == 0:
             break
-    except ValueError:
-        print(ValueError)
+    except ValueError as e:
+        print(e)
         print('ENTER CORRECT NUMBER DUMBO')

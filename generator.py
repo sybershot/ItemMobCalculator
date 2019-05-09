@@ -1,41 +1,44 @@
 # ЗДЕСЬ БУДУТ ПОДГРУЖАТЬСЯ СПИСКИ ПРЕДМЕТОВ И МОБОВ, А ЕЩЁ ВСЯКИЕ ПЕРДЕЛКИ ТИПА ГЕНЕРАЦИЯ ПРЕДМЕТОВ/МОБОВ
 import random
 import json
-
-from pip._vendor.distlib.compat import raw_input
+from items import ItemMelee, ItemRanged, ItemBase
 
 # АЙТЕМСЫ
+from modifiers import ModifierMinor, ModifierMajor
+
 with open("items.json", "r", encoding='utf-8') as item_in:
-    item_l = json.load(item_in)
+    game_data = json.load(item_in)
+    item_data = game_data["weapon_type"]
+    major_mod_data = game_data["major_mod"]
+    minor_mod_data = game_data["minor_mod"]
 
 
 def gen_item():
     try:
-        ilvl = float(raw_input("Enter item lvl: "))
-    except ValueError:
+        ilvl = float(input("Enter item lvl: "))
+    except ValueError as e:
         ilvl = random.randint(1, 10)
-    rarity = random.uniform(0, 3)
-    name = ""
+    rarity = round(random.lognormvariate(0, 0.42), 3)
+    item = random.choice([ItemMelee, ItemRanged])(item_lvl=ilvl, rarity=rarity)  # type:ItemBase
+    item.name = random.choice(game_data["weapon_type"][item.type_name]["names"])
     if ilvl > 10:
         ilvl = 10
-        # TODO: stats of items.
-    if rarity < 1:
-        name = random.choice(item_l["type"])
-        modifiers = 0
-    elif 1 <= rarity < 2:
-        name = "{} {}".format(random.choice(item_l["type"]), random.choice(item_l["postfix"]))
-        modifiers = 1
-    elif 2 <= rarity < 3:
-        name = "{} {} {}".format(random.choice(item_l["affix"]), random.choice(item_l["type"]),
-                                 random.choice(item_l["postfix"]))
-        modifiers = 2
-    else:
-        name = "{} {} {}".format(random.choice(item_l["affix"]), random.choice(item_l["type"]),
-                                 random.choice(item_l["postfix"]))
-        modifiers = 3
+    gen_modifiers(rarity, item)
     damage = random.uniform(ilvl, ilvl * 2)
-    print('Name: {}\n Item lvl: {}\n Rarity: {}\n Modifiers: {}\n Damage: {}'
-          .format(name, ilvl, rarity, modifiers, int(damage)))
+    item.damage = damage
+    print(item)
+
+
+def gen_modifiers(rarity, item: ItemBase):
+    if rarity < 1:
+        return
+    if 1 <= rarity < 2:
+        item.max_modifier += 1
+        item.add_modifier(ModifierMinor(**random.choice(minor_mod_data)))
+    if 2 <= rarity < 3:
+        item.max_modifier += 2
+        item.add_modifier(ModifierMinor(**random.choice(minor_mod_data)))
+        item.add_modifier(ModifierMajor(**random.choice(major_mod_data)))
 
 
 # ======================================================================================================================
