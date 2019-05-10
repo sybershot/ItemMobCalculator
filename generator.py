@@ -1,9 +1,9 @@
 # ЗДЕСЬ БУДУТ ПОДГРУЖАТЬСЯ СПИСКИ ПРЕДМЕТОВ И МОБОВ, А ЕЩЁ ВСЯКИЕ ПЕРДЕЛКИ ТИПА ГЕНЕРАЦИЯ ПРЕДМЕТОВ/МОБОВ
 import random
 import json
-from items import ItemMelee, ItemRanged, ItemBase
 
 # АЙТЕМСЫ
+from items import ItemMelee, ItemRanged, ItemBase
 from modifiers import ModifierMinor, ModifierMajor
 
 with open("items.json", "r", encoding='utf-8') as item_in:
@@ -13,12 +13,14 @@ with open("items.json", "r", encoding='utf-8') as item_in:
     minor_mod_data = game_data["minor_mod"]
 
 
-def gen_item():
-    try:
-        ilvl = float(input("Enter item lvl: "))
-    except ValueError as e:
-        ilvl = random.randint(1, 10)
-    rarity = round(random.lognormvariate(0, 0.42), 3)
+def gen_item(ilvl=None,rarity= None):
+    if ilvl is None:
+        try:
+            ilvl = int(input("Enter item lvl: "))
+        except ValueError as e:
+            ilvl = random.randint(1, 10)
+    if rarity is None:
+        rarity = round(random.lognormvariate(0, 0.42), 3)
     item = random.choice([ItemMelee, ItemRanged])(item_lvl=ilvl, rarity=rarity)  # type:ItemBase
     item.name = random.choice(game_data["weapon_type"][item.type_name]["names"])
     if ilvl > 10:
@@ -32,13 +34,15 @@ def gen_item():
 def gen_modifiers(rarity, item: ItemBase):
     if rarity < 1:
         return
-    if 1 <= rarity < 2:
+    if rarity > 1:
         item.max_modifier += 1
         item.add_modifier(ModifierMinor(**random.choice(minor_mod_data)))
-    if 2 <= rarity < 3:
-        item.max_modifier += 2
-        item.add_modifier(ModifierMinor(**random.choice(minor_mod_data)))
+    if rarity > 2:
+        item.max_modifier += 1
         item.add_modifier(ModifierMajor(**random.choice(major_mod_data)))
+    # if rarity>=3:
+    #     item.max_modifier += 1
+    #     item.add_modifier(ModifierMajor(**random.choice(major_mod_data)))
 
 
 # ======================================================================================================================
@@ -55,3 +59,6 @@ def gen_mob():
     name = affix + ' ' + mtype + ' ' + pfix
     # TODO: stats of mobs.
     print(name)
+
+if __name__ == '__main__':
+    gen_item(10,3)
