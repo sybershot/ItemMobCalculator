@@ -1,4 +1,6 @@
-from modifiers import ModifierMajor, ModifierMinor
+from typing import List
+
+from modifiers import ModifierMajor, ModifierMinor, ModifierBase
 
 
 class ItemBase:
@@ -10,9 +12,9 @@ class ItemBase:
         self._rarity = rarity
         self._use_speed = use_speed
         if modifiers is None:
-            self._modifiers = []
+            self._modifiers = []  # type:List[ModifierBase]
         else:
-            self._modifiers = modifiers
+            self._modifiers = modifiers  # type:List[ModifierBase]
         self._max_modifier = max_modifier
 
     # region Getters/Setters
@@ -65,20 +67,27 @@ class ItemBase:
             self._modifiers.append(modifier)
 
     @property
+    def modifiers(self):
+        return self._modifiers
+
+    @property
     def full_name(self):
         accumulator = self.name
-        for mod in self._modifiers:
+        for mod in self.modifiers:
             if type(mod) is ModifierMajor:
                 accumulator = mod.name + ' ' + accumulator
             if type(mod) is ModifierMinor:
                 accumulator = accumulator + ' ' + mod.name
         return accumulator
 
-    def __repr__(self):
+    def __str__(self):
         return f"Name: {self.full_name}\n" \
-            f" Item lvl: {self.item_lvl}\n" \
-            f" Rarity: {self.rarity}\n" \
-            f" Modifiers: {self._modifiers}\n"
+               f"\tItem lvl: {self.item_lvl}\n" \
+               f"\tRarity: {self.rarity}\n" \
+               f"\tModifiers: {self._modifiers}\n"
+
+    def __repr__(self):
+        return f'<Item name:{self.full_name} lvl:{self.item_lvl} modifiers:{self._modifiers}>'
 
 
 class ItemWeapon(ItemBase):
@@ -105,7 +114,7 @@ class ItemWeapon(ItemBase):
     # region Getters/Setters
     @property
     def damage(self):
-        return self._damage
+        return round(self._damage, 3)
 
     @damage.setter
     def damage(self, new_damage):
@@ -113,15 +122,43 @@ class ItemWeapon(ItemBase):
 
     @property
     def damage_type(self):
+        for mod in self._modifiers:
+            for effect_cat, effect_data in mod.parsed_effects.get('item', {}).items():
+                for mod_type, mod_value in effect_data.items():
+                    if effect_cat == 'dmg' and mod_type == 'type':
+                        return mod_value
         return self._damage_type
 
     @damage_type.setter
     def damage_type(self, new_damage_type):
         self._damage_type = new_damage_type
 
+    @property
+    def full_damage(self):
+        current_damage = self.damage
+        for mod in self._modifiers:
+            for effect_cat, effect_data in mod.parsed_effects.get('item', {}).items():
+                for mod_type, mod_value in effect_data.items():
+                    if effect_cat == 'dmg':
+                        if mod_type == 'mult':
+                            current_damage *= mod_value
+                        elif mod_type == 'add':
+                            current_damage += mod_value
+                    else:
+                        print(effect_cat, mod_type, mod_value)
+        return round(current_damage, 3)
+
     # endregion
-    def __repr__(self):
-        return super().__repr__() + f"Damage: {self.damage}"
+    def __str__(self):
+        additional_dmg = ''
+        for mod in self._modifiers:
+            for effect_cat, effect_data in mod.parsed_effects.get('item', {}).items():
+                for mod_type, mod_value in effect_data.items():
+                    if effect_cat == 'effect':
+                        if mod_type == 'dmg':
+                            additional_dmg += f'+{mod_value}'
+
+        return super().__str__() + f'\tDamage: {self.full_damage}{additional_dmg}({self.damage})\n\tDamage type:"{self.damage_type}"'
 
 
 class ItemMelee(ItemWeapon):
