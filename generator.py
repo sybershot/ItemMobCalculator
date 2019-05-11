@@ -13,7 +13,7 @@ with open("items.json", "r", encoding='utf-8') as item_in:
     minor_mod_data = game_data["minor_mod"]
 
 
-def gen_item(ilvl=None,rarity= None):
+def gen_item(ilvl=None, rarity=None):
     if ilvl is None:
         try:
             ilvl = int(input("Enter item lvl: "))
@@ -60,5 +60,6 @@ def gen_mob():
     # TODO: stats of mobs.
     print(name)
 
+
 if __name__ == '__main__':
-    gen_item(10,3)
+    gen_item()

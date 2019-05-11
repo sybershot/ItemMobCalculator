@@ -1,12 +1,9 @@
-from typing import List
-
 from modifiers import ModifierMajor, ModifierMinor, ModifierBase
 
 
 class ItemBase:
-    type_name = "item"
-
     def __init__(self, item_lvl=0, name="Undefined?", modifiers=None, rarity=0, use_speed=0, max_modifier=0):
+        self.type_name = "item"
         self._item_lvl = item_lvl
         self._name = name
         self._rarity = rarity
@@ -82,18 +79,17 @@ class ItemBase:
 
     def __str__(self):
         return f"Name: {self.full_name}\n" \
-               f"\tItem lvl: {self.item_lvl}\n" \
-               f"\tRarity: {self.rarity}\n" \
-               f"\tModifiers: {self._modifiers}\n"
+            f"\tItem lvl: {self.item_lvl}\n" \
+            f"\tRarity: {self.rarity}\n" \
+            f"\tModifiers: {self._modifiers}\n"
 
     def __repr__(self):
         return f'<Item name:{self.full_name} lvl:{self.item_lvl} modifiers:{self._modifiers}>'
 
 
 class ItemWeapon(ItemBase):
-    type_name = "weapon"
-
     def __init__(self, damage=0, damage_type="default", sockets=None, max_socket=0, *args, **kwargs):
+        self.type_name = "weapon"
         super().__init__(*args, **kwargs)
         self._damage = damage
         self._damage_type = damage_type
@@ -162,9 +158,8 @@ class ItemWeapon(ItemBase):
 
 
 class ItemMelee(ItemWeapon):
-    type_name = "melee"
-
     def __init__(self, use_range=0, *args, **kwargs):
+        self.type_name = "melee"
         super().__init__(*args, **kwargs)
         self._use_range = use_range
 
@@ -178,9 +173,8 @@ class ItemMelee(ItemWeapon):
 
 
 class ItemRanged(ItemWeapon):
-    type_name = "ranged"
-
     def __init__(self, use_range=100, *args, **kwargs):
+        self.type_name = "ranged"
         super().__init__(*args, **kwargs)
         self._use_range = use_range
 
