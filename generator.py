@@ -14,6 +14,7 @@ with open("items.json", "r", encoding='utf-8') as item_in:
 
 
 def gen_item(ilvl=None, rarity=None):
+    """TODO: documentation"""
     if ilvl is None:
         try:
             ilvl = int(input("Enter item lvl: "))

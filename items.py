@@ -89,8 +89,8 @@ class ItemBase:
 
 class ItemWeapon(ItemBase):
     def __init__(self, damage=0, damage_type="default", sockets=None, max_socket=0, *args, **kwargs):
-        self.type_name = "weapon"
         super().__init__(*args, **kwargs)
+        self.type_name = "weapon"
         self._damage = damage
         self._damage_type = damage_type
         if sockets is None:
@@ -159,8 +159,8 @@ class ItemWeapon(ItemBase):
 
 class ItemMelee(ItemWeapon):
     def __init__(self, use_range=0, *args, **kwargs):
-        self.type_name = "melee"
         super().__init__(*args, **kwargs)
+        self.type_name = "melee"
         self._use_range = use_range
 
     @property
@@ -174,8 +174,8 @@ class ItemMelee(ItemWeapon):
 
 class ItemRanged(ItemWeapon):
     def __init__(self, use_range=100, *args, **kwargs):
-        self.type_name = "ranged"
         super().__init__(*args, **kwargs)
+        self.type_name = "ranged"
         self._use_range = use_range
 
     @property
